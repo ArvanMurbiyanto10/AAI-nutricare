@@ -1,0 +1,663 @@
+/* src/components/LandingPage.css */
+
+.landing-wrapper {
+  overflow-x: hidden;
+  width: 100vw;
+  background-color: #f8fafc;
+}
+
+/* --- HERO SECTION (PREMIUM PHOTO BACKGROUND) --- */
+.hero-section {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  /* Background Foto dengan Lapisan Gelap */
+  background:
+    linear-gradient(rgba(6, 30, 20, 0.85), rgba(6, 30, 20, 0.95)),
+    url("/fotolandingpage.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  overflow: hidden;
+}
+
+/* Ornamen Cahaya Radial di Background */
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 1;
+}
+
+.glow-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(16, 185, 129, 0.2);
+  top: -100px;
+  left: -100px;
+}
+
+.glow-2 {
+  width: 600px;
+  height: 600px;
+  background: rgba(52, 211, 153, 0.15);
+  bottom: -200px;
+  right: -100px;
+}
+
+/* Container Layout */
+.hero-container {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 100px 5% 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  z-index: 2;
+  position: relative;
+}
+
+/* --- KOLOM KIRI (TEKS) --- */
+.hero-text-content {
+  flex: 1.2;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modern-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  backdrop-filter: blur(10px);
+  animation: slideUpFade 1s ease forwards;
+}
+
+.badge-icon {
+  font-size: 1.1rem;
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -1px;
+  animation: slideUpFade 1s ease forwards 0.2s;
+  opacity: 0;
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #34d399, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  font-size: 6.5rem;
+  font-weight: 900;
+  letter-spacing: -3px;
+  margin-bottom: -10px;
+}
+
+.hero-description {
+  font-size: 1.15rem;
+  color: #94a3b8;
+  margin: 30px 0 40px;
+  line-height: 1.7;
+  font-weight: 400;
+  animation: slideUpFade 1s ease forwards 0.4s;
+  opacity: 0;
+}
+
+/* Tombol */
+.hero-action-buttons {
+  display: flex;
+  gap: 20px;
+  animation: slideUpFade 1s ease forwards 0.6s;
+  opacity: 0;
+}
+
+.btn-modern-primary,
+.btn-modern-secondary {
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-modern-primary {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+}
+
+.btn-modern-primary:hover {
+  background: #059669;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
+  color: white;
+}
+
+.btn-modern-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.btn-modern-secondary:hover {
+  background: #ffffff;
+  color: #064e3b;
+  transform: translateY(-4px);
+}
+
+/* --- KOLOM KANAN (VISUAL FOTO) --- */
+.hero-visual-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  animation: fadeIn 1.5s ease forwards 0.8s;
+  opacity: 0;
+}
+
+.premium-image-frame {
+  position: relative;
+  border-radius: 30px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  transform: rotate(-2deg);
+  transition: transform 0.5s ease;
+}
+
+.premium-image-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  border-radius: 20px;
+  display: block;
+  object-fit: cover;
+}
+
+/* Label Melayang di atas Foto */
+.floating-tag {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  color: #064e3b;
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.tag-top {
+  top: 30px;
+  left: -30px;
+  animation-delay: 0s;
+}
+
+.tag-bottom {
+  bottom: 40px;
+  right: -30px;
+  animation-delay: 2s;
+}
+
+/* Scroll Indicator */
+.scroll-indicator-modern {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 1.2s;
+}
+
+.scroll-indicator-modern p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.mouse-icon {
+  width: 26px;
+  height: 46px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.wheel {
+  width: 4px;
+  height: 8px;
+  background-color: #ffffff;
+  border-radius: 2px;
+  animation: scrollWheel 1.5s infinite;
+}
+
+/* --- FITUR / INFO SECTION --- */
+.features-section {
+  padding: 120px 5%;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Ornamen Blur di Background Fitur */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: #a7f3d0;
+  top: 10%;
+  left: -100px;
+}
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: #dcfce7;
+  bottom: 20%;
+  right: -150px;
+}
+.blob-3 {
+  width: 300px;
+  height: 300px;
+  background: #cffafe;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.features-header h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.text-highlight {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.features-header p {
+  font-size: 1.2rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- ABOUT WRAPPER --- */
+.about-wrapper {
+  max-width: 1200px;
+  margin: 0 auto 100px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 50px;
+  border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+}
+
+.about-text-content {
+  flex: 1;
+}
+
+.about-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 20px;
+}
+
+.about-text-content p {
+  font-size: 1.15rem;
+  color: #475569;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.about-text-content strong {
+  color: #10b981;
+}
+
+.about-checkmarks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-checkmarks li {
+  font-size: 1.1rem;
+  color: #334155;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.about-visual-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+/* Kartu Stat Melayang (Visualisasi UI) */
+.floating-stat-card {
+  background: #ffffff;
+  padding: 20px 25px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+  animation: floatSlow 6s ease-in-out infinite;
+  transition: transform 0.3s;
+}
+
+.floating-stat-card:hover {
+  transform: scale(1.05);
+}
+
+.card-1 {
+  animation-delay: 0s;
+  margin-left: auto;
+  width: 85%;
+}
+.card-2 {
+  animation-delay: 2s;
+  margin-right: auto;
+  width: 90%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+.card-3 {
+  animation-delay: 4s;
+  margin-left: auto;
+  width: 80%;
+}
+
+.card-2 h4,
+.card-2 p {
+  color: white !important;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  background: #f1f5f9;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+.card-2 .stat-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.floating-stat-card h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.floating-stat-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --- HEADER FITUR UNGGULAN KAMI --- */
+.unggulan-header {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: slideUpFade 1s ease forwards;
+}
+
+.unggulan-header h3 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 15px;
+}
+
+.unggulan-header p {
+  font-size: 1.15rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- GRID KARTU FITUR --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 40px 30px;
+  border-radius: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 25px 50px rgba(16, 185, 129, 0.15);
+  background: #ffffff;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dcfce7, #ecfdf5);
+  border-radius: 22px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: #475569;
+  line-height: 1.6;
+  font-size: 1.05rem;
+}
+
+/* --- ANIMASI --- */
+@keyframes slideUpFade {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scrollWheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* --- RESPONSIVE UNTUK LAYAR KECIL --- */
+@media (max-width: 960px) {
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 130px;
+  }
+
+  .hero-text-content {
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .gradient-text {
+    font-size: 5rem;
+    margin-bottom: 0;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .hero-action-buttons {
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .premium-image-frame {
+    transform: rotate(0deg);
+    margin-top: 30px;
+  }
+
+  .tag-top {
+    left: -10px;
+  }
+  .tag-bottom {
+    right: -10px;
+  }
+
+  .about-wrapper {
+    flex-direction: column;
+    padding: 30px;
+  }
+
+  .card-1,
+  .card-2,
+  .card-3 {
+    width: 100%;
+  }
+
+  .unggulan-header h3 {
+    font-size: 2rem;
+  }
+  .unggulan-header p {
+    font-size: 1rem;
+    padding: 0 15px;
+  }
+}
