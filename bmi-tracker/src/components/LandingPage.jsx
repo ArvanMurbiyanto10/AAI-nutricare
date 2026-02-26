@@ -4,7 +4,52 @@ import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import "./LandingPage.css";
 
+// Komponen Pembantu untuk Item Makanan
+const FoodItem = ({ image, name, portion, cal, color, fill }) => (
+  <div className="food-item">
+    <div className="food-icon-wrapper">
+      <img src={image} alt={name} className="food-img-item" />
+    </div>
+    <div className="food-details">
+      <h4>
+        {name} <span className="food-portion">({portion})</span>
+      </h4>
+      <div className="calorie-bar">
+        <div
+          className="bar-fill"
+          style={{ width: fill, background: color }}
+        ></div>
+      </div>
+    </div>
+    <div
+      className="food-calorie-value"
+      style={{
+        color: color,
+        background: `${color}15`, // Background transparan dari warna utama
+      }}
+    >
+      {cal} kcal
+    </div>
+  </div>
+);
+
 const LandingPage = () => {
+  const [quickHeight, setQuickHeight] = React.useState("");
+  const [quickWeight, setQuickWeight] = React.useState("");
+  const [quickResult, setQuickResult] = React.useState(null);
+
+  const calculateQuickBMI = (e) => {
+    e.preventDefault();
+    if (quickHeight && quickWeight) {
+      const bmi = (quickWeight / Math.pow(quickHeight / 100, 2)).toFixed(1);
+      let status = "Normal";
+      if (bmi < 18.5) status = "Kurus";
+      else if (bmi >= 25 && bmi < 30) status = "Overweight";
+      else if (bmi >= 30) status = "Obesitas";
+      setQuickResult({ bmi, status });
+    }
+  };
+
   const scrollToFeatures = () => {
     const featuresArea = document.getElementById("info-features");
     if (featuresArea) {
@@ -19,12 +64,10 @@ const LandingPage = () => {
       <div className="landing-wrapper">
         {/* --- HERO SECTION (PREMIUM PHOTO BACKGROUND) --- */}
         <div className="hero-section">
-          {/* Ornamen Cahaya di Background */}
           <div className="hero-glow glow-1"></div>
           <div className="hero-glow glow-2"></div>
 
           <div className="hero-container">
-            {/* --- KOLOM KIRI: TEKS --- */}
             <div className="hero-text-content">
               <div className="modern-badge">
                 <span className="badge-icon">✨</span> Revolusi Gaya Hidup Sehat
@@ -50,7 +93,6 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* --- KOLOM KANAN: GAMBAR ESTETIK --- */}
             <div className="hero-visual-content">
               <div className="premium-image-frame">
                 <img
@@ -58,28 +100,63 @@ const LandingPage = () => {
                   alt="Preview AAI Nutricare"
                   className="hero-image"
                 />
-
-                {/* Ornamen Kartu Melayang di atas foto */}
                 <div className="floating-tag tag-top">🥗 Gizi Terjaga</div>
                 <div className="floating-tag tag-bottom">
                   🎯 Target Tercapai
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Indikator Scroll Bawah */}
-          <div className="scroll-indicator-modern" onClick={scrollToFeatures}>
-            <p>Kenali Lebih Lanjut</p>
-            <div className="mouse-icon">
-              <div className="wheel"></div>
+              {/* QUICK BMI CALCULATOR (MOVED HERE) */}
+              <div className="quick-bmi-card">
+                <div className="quick-bmi-header">
+                  <h4>💡 Cek BMI Cepat</h4>
+                  <p>Masukkan data untuk hasil instan</p>
+                </div>
+                <form onSubmit={calculateQuickBMI} className="quick-bmi-form">
+                  <div className="quick-input-group">
+                    <input
+                      type="number"
+                      placeholder="Tinggi (cm)"
+                      value={quickHeight}
+                      onChange={(e) => setQuickHeight(e.target.value)}
+                      required
+                    />
+                    <input
+                      type="number"
+                      placeholder="Berat (kg)"
+                      value={quickWeight}
+                      onChange={(e) => setQuickWeight(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="btn-quick-calc">
+                    Hitung
+                  </button>
+                </form>
+
+                {quickResult && (
+                  <div className="quick-result-overlay">
+                    <div className="result-main">
+                      <span className="res-bmi">{quickResult.bmi}</span>
+                      <span
+                        className={`res-status ${quickResult.status.toLowerCase()}`}
+                      >
+                        {quickResult.status}
+                      </span>
+                    </div>
+                    <p className="res-cta">
+                      Ingin menyimpan hasil ini dan memantau progres harianmu?
+                      <Link to="/register"> Daftar Sekarang!</Link>
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* --- FITUR / INFO SECTION --- */}
         <div id="info-features" className="features-section">
-          {/* Ornamen Bola Warna (Blob) Blur di Background Fitur */}
           <div className="bg-blob blob-1"></div>
           <div className="bg-blob blob-2"></div>
           <div className="bg-blob blob-3"></div>
@@ -95,7 +172,6 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* --- PENJELASAN DETAIL APLIKASI (SPLIT LAYOUT) --- */}
           <div id="about-section" className="about-wrapper">
             <div className="about-text-content">
               <h3 className="about-title">Asisten Kesehatan Pribadimu</h3>
@@ -118,7 +194,6 @@ const LandingPage = () => {
             </div>
 
             <div className="about-visual-content">
-              {/* Kartu stat UI melayang */}
               <div className="floating-stat-card card-1">
                 <span className="stat-icon">🔥</span>
                 <div>
@@ -143,7 +218,6 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* --- HEADER FITUR UNGGULAN KAMI --- */}
           <div className="unggulan-header">
             <h3>
               <span className="text-highlight">Fitur Unggulan</span> Kami
@@ -154,7 +228,6 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* --- GRID KARTU FITUR --- */}
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon glass-icon">⚖️</div>
@@ -183,6 +256,377 @@ const LandingPage = () => {
                 Pantau histori harianmu dan jadikan evaluasi yang memotivasi.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* --- CARA KERJA SECTION (3 LANGKAH MUDAH) --- */}
+        <div className="how-it-works-section">
+          <div className="section-header-centered">
+            <div className="modern-badge">
+              <span className="badge-icon">🚀</span> Langkah Mudah
+            </div>
+            <h2>
+              Cara Kerja <span className="text-highlight">AAI Nutricare</span>
+            </h2>
+            <p>
+              Mulai perjalanan sehatmu dalam hitungan menit. Tanpa ribet, tanpa
+              pusing.
+            </p>
+          </div>
+
+          <div className="steps-container">
+            <div className="step-card">
+              <div className="step-number">1</div>
+              <div className="step-icon-big">📝</div>
+              <h3>Input Data</h3>
+              <p>
+                Masukkan tinggi, berat, dan target berat badan idealmu di profil
+                pengguna.
+              </p>
+            </div>
+
+            <div className="step-arrow">➔</div>
+
+            <div className="step-card">
+              <div className="step-number">2</div>
+              <div className="step-icon-big">📸</div>
+              <h3>Catat Konsumsi</h3>
+              <p>
+                Pilih makanan dari database kami yang lengkap atau catat asupan
+                harianmu.
+              </p>
+            </div>
+
+            <div className="step-arrow">➔</div>
+
+            <div className="step-card">
+              <div className="step-number">3</div>
+              <div className="step-icon-big">📊</div>
+              <h3>Lihat Hasil</h3>
+              <p>
+                Pantau grafik kemajuanmu setiap minggu dan capai target sehatmu
+                lebih cepat.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* --- ARTIKEL EDUKASI KALORI SECTION --- */}
+        <div className="article-section">
+          <div className="article-container">
+            <div className="article-text-content">
+              <div
+                className="modern-badge"
+                style={{
+                  marginBottom: "15px",
+                  background: "rgba(16, 185, 129, 0.1)",
+                  color: "#10b981",
+                  border: "none",
+                }}
+              >
+                <span className="badge-icon">📚</span> Edukasi Gizi
+              </div>
+              <h2 className="article-title">
+                Memahami <span className="text-highlight">Kalori</span> dalam
+                Piring Anda
+              </h2>
+              <p className="article-description">
+                Kalori adalah sumber energi utama. Namun, kalori berlebih yang
+                tidak terbakar akan disimpan sebagai lemak tubuh. Mengetahui
+                estimasi kalori dari makanan sehari-hari adalah langkah cerdas
+                menuju berat badan ideal.
+              </p>
+
+              <div className="article-tips">
+                <div className="tip-box">
+                  <div className="tip-icon">📉</div>
+                  <div>
+                    <h4>Defisit Kalori</h4>
+                    <p>
+                      Kunci diet: Konsumsi kalori lebih sedikit dari yang
+                      dibakar tubuh.
+                    </p>
+                  </div>
+                </div>
+                <div className="tip-box">
+                  <div className="tip-icon">📈</div>
+                  <div>
+                    <h4>Surplus Kalori</h4>
+                    <p>
+                      Fokus menambah massa: Konsumsi lebih banyak protein
+                      berkualitas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="article-visual-content">
+              {/* Simulasi UI Widget Aplikasi */}
+              <div className="app-widget-card">
+                <div className="widget-header">
+                  <div>
+                    <h4>Database Makanan Harian</h4>
+                    <p>Estimasi rata-rata porsi normal</p>
+                  </div>
+                  <span className="badge-warning">Perhatikan Porsi!</span>
+                </div>
+
+                <div className="food-list-container scrollable-food-list">
+                  {/* Karbohidrat */}
+                  <div className="category-tag">Energi & Karbo</div>
+                  {[
+                    {
+                      image: "/nasi-putih.jpeg",
+                      name: "Nasi Putih",
+                      portion: "1 Centong",
+                      cal: 130,
+                      color: "#3b82f6",
+                      fill: "30%",
+                    },
+                    {
+                      image: "/roti-gandum.jpeg",
+                      name: "Roti Gandum",
+                      portion: "1 Lembar",
+                      cal: 67,
+                      color: "#3b82f6",
+                      fill: "15%",
+                    },
+                    {
+                      image: "/mie-instan.jpeg",
+                      name: "Mie Instan",
+                      portion: "1 Bungkus",
+                      cal: 380,
+                      color: "#ef4444",
+                      fill: "85%",
+                    },
+                    {
+                      image: "/kentang-rebus.jpeg",
+                      name: "Kentang Rebus",
+                      portion: "100g",
+                      cal: 87,
+                      color: "#3b82f6",
+                      fill: "20%",
+                    },
+                  ].map((f, i) => (
+                    <FoodItem key={i} {...f} />
+                  ))}
+
+                  {/* Protein */}
+                  <div className="category-tag mt-4">Protein & Lauk</div>
+                  {[
+                    {
+                      image: "/ayam-dada-bakar.jpeg",
+                      name: "Dada Ayam Bakar",
+                      portion: "100g",
+                      cal: 165,
+                      color: "#10b981",
+                      fill: "40%",
+                    },
+                    {
+                      image: "/telur-rebus.jpeg",
+                      name: "Telur Rebus",
+                      portion: "1 Butir",
+                      cal: 78,
+                      color: "#10b981",
+                      fill: "18%",
+                    },
+                    {
+                      image: "/ikan-bakar.jpeg",
+                      name: "Ikan Bakar",
+                      portion: "100g",
+                      cal: 140,
+                      color: "#10b981",
+                      fill: "35%",
+                    },
+                    {
+                      image: "/daging-sapi.jpeg",
+                      name: "Daging Sapi",
+                      portion: "100g",
+                      cal: 250,
+                      color: "#f59e0b",
+                      fill: "60%",
+                    },
+                  ].map((f, i) => (
+                    <FoodItem key={i} {...f} />
+                  ))}
+
+                  {/* Camilan/Lainnya */}
+                  <div className="category-tag mt-4">Camilan & Buah</div>
+                  {[
+                    {
+                      image: "/gorengan-bakwan.jpeg",
+                      name: "Gorengan Bakwan",
+                      portion: "1 Buah",
+                      cal: 140,
+                      color: "#ef4444",
+                      fill: "35%",
+                    },
+                    {
+                      image: "/pisang-ambon.jpeg",
+                      name: "Pisang Ambon",
+                      portion: "1 Buah",
+                      cal: 105,
+                      color: "#10b981",
+                      fill: "25%",
+                    },
+                    {
+                      image: "/apel-merah.jpeg",
+                      name: "Apel Merah",
+                      portion: "1 Buah",
+                      cal: 52,
+                      color: "#10b981",
+                      fill: "12%",
+                    },
+                    {
+                      image: "/alpukat.jpeg",
+                      name: "Alpukat",
+                      portion: "100g",
+                      cal: 160,
+                      color: "#f59e0b",
+                      fill: "40%",
+                    },
+                  ].map((f, i) => (
+                    <FoodItem key={i} {...f} />
+                  ))}
+                </div>
+                <div className="widget-footer">
+                  <p>Dan 500+ database lainnya di dalam aplikasi...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* --- APP DOWNLOAD SECTION (BARU) --- */}
+        <div className="app-download-section">
+          <div className="app-download-wrapper">
+            {/* Ornamen Background Circle */}
+            <div className="download-bubble bubble-1"></div>
+            <div className="download-bubble bubble-2"></div>
+
+            {/* Ikon Android Floating (Kanan Atas) */}
+            <div className="floating-android">
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                height="24"
+                width="24"
+              >
+                <path d="M17.523 15.3414C17.523 15.914 17.0602 16.3768 16.4875 16.3768C15.9149 16.3768 15.4521 15.914 15.4521 15.3414C15.4521 14.7687 15.9149 14.306 16.4875 14.306C17.0602 14.306 17.523 14.7687 17.523 15.3414ZM7.51246 16.3768C8.08511 16.3768 8.54789 15.914 8.54789 15.3414C8.54789 14.7687 8.08511 14.306 7.51246 14.306C6.93981 14.306 6.47703 14.7687 6.47703 15.3414C6.47703 15.914 6.93981 16.3768 7.51246 16.3768ZM17.9715 10.9701L19.8247 7.76022C19.9146 7.60447 19.8611 7.40539 19.7054 7.31557C19.5496 7.22576 19.3506 7.27926 19.2607 7.43501L17.3789 10.6946C15.7725 9.96766 13.9398 9.54395 12 9.54395C10.0602 9.54395 8.22748 9.96766 6.62111 10.6946L4.73926 7.43501C4.64945 7.27926 4.45037 7.22576 4.29462 7.31557C4.13887 7.40539 4.08537 7.60447 4.17518 7.76022L6.02846 10.9701C2.61051 12.8339 0.316867 16.3687 0 20.5361H24C23.6831 16.3687 21.3895 12.8339 17.9715 10.9701Z"></path>
+              </svg>
+            </div>
+
+            <div className="app-dl-content">
+              <div className="app-dl-badge">
+                <span className="badge-icon">📱</span> Aplikasi Mobile
+              </div>
+
+              <h2 className="app-dl-title">
+                Download Aplikasi
+                <br />
+                AAI Nutricare Sekarang!
+              </h2>
+
+              <p className="app-dl-desc">
+                Akses semua fitur kesehatan langsung dari smartphone Anda.
+                Pencatatan asupan makanan, kalkulator BMI cerdas, dan analisis
+                gizi dalam genggaman.
+              </p>
+
+              <div className="app-dl-features">
+                <span className="app-dl-feature-pill">
+                  <span className="icon">📸</span> Galeri Nutrisi
+                </span>
+                <span className="app-dl-feature-pill">
+                  <span className="icon">📊</span> Jurnal Kalori
+                </span>
+                <span className="app-dl-feature-pill">
+                  <span className="icon">📈</span> Pantau Progres
+                </span>
+              </div>
+
+              <div
+                className="btn-download-app disabled-btn"
+                title="Segera Hadir!"
+              >
+                <div className="dl-btn-texts">
+                  <span className="small">DOWNLOAD UNTUK</span>
+                  <span className="big">Android</span>
+                </div>
+                <span className="dl-btn-arrow">🔒</span>
+              </div>
+
+              <p className="app-dl-note warning-text">
+                <span className="info-icon">🚧</span> Aplikasi mobile sedang
+                dalam tahap pembuatan
+              </p>
+            </div>
+
+            <div className="app-dl-visual">
+              <img
+                src="/preview-mobile.jpeg"
+                alt="AAI Nutricare Mobile App"
+                className="phone-mockup"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* --- FAQ SECTION --- */}
+        <div id="faq-section" className="faq-section">
+          <div className="faq-header">
+            <h2>
+              Pertanyaan <span className="text-highlight">Umum</span>
+            </h2>
+            <p>
+              Temukan jawaban untuk pertanyaan yang paling sering diajukan
+              seputar AAI Nutricare.
+            </p>
+          </div>
+
+          <div className="faq-grid">
+            <div className="faq-card">
+              <h4>Apakah AAI Nutricare gratis digunakan?</h4>
+              <p>
+                Ya! Fitur utama seperti kalkulator BMI dan jurnal kalori harian
+                dapat Anda gunakan sepenuhnya secara gratis.
+              </p>
+            </div>
+            <div className="faq-card">
+              <h4>Bagaimana cara aplikasi ini menghitung kalori?</h4>
+              <p>
+                Sistem kami akan mengurangi target kalori harian Anda secara
+                otomatis setiap kali Anda menambahkan makanan ke dalam jurnal.
+              </p>
+            </div>
+            <div className="faq-card">
+              <h4>Apakah data kesehatan saya aman?</h4>
+              <p>
+                Keamanan privasi Anda adalah prioritas kami. Data berat badan
+                dan riwayat asupan gizi hanya bisa diakses oleh Anda sendiri.
+              </p>
+            </div>
+            <div className="faq-card">
+              <h4>Apakah cocok untuk menaikkan berat badan?</h4>
+              <p>
+                Tentu saja! Sesuaikan target di profil Anda, dan sistem akan
+                membantu memantau asupan kalori surplus Anda.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* --- CALL TO ACTION (CTA) SECTION --- */}
+        <div className="cta-section">
+          <div className="cta-box">
+            <h2>Siap Menjaga Kesehatan Pribadi Anda?</h2>
+            <p>
+              Bergabunglah dengan ribuan pengguna yang telah mempercayai AAI
+            </p>
+            <Link to="/register" className="btn-modern-primary btn-cta">
+              Mulai Sekarang - Gratis
+            </Link>
           </div>
         </div>
       </div>
