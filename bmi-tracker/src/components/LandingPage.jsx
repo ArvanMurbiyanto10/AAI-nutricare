@@ -1,5 +1,5 @@
 // src/components/LandingPage.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import "./LandingPage.css";
@@ -34,9 +34,32 @@ const FoodItem = ({ image, name, portion, cal, color, fill }) => (
 );
 
 const LandingPage = () => {
-  const [quickHeight, setQuickHeight] = React.useState("");
-  const [quickWeight, setQuickWeight] = React.useState("");
-  const [quickResult, setQuickResult] = React.useState(null);
+  const [quickHeight, setQuickHeight] = useState("");
+  const [quickWeight, setQuickWeight] = useState("");
+  const [quickResult, setQuickResult] = useState(null);
+
+  // --- ENGINE ANIMASI SCROLL (INTERSECTION OBSERVER) ---
+  useEffect(() => {
+    // Pengaturan observer: Animasi jalan saat 15% elemen terlihat di layar
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+        }
+      });
+    }, observerOptions);
+
+    // Ambil semua elemen dengan class 'reveal-on-scroll'
+    const revealElements = document.querySelectorAll(".reveal-on-scroll");
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   const calculateQuickBMI = (e) => {
     e.preventDefault();
@@ -48,6 +71,12 @@ const LandingPage = () => {
       else if (bmi >= 30) status = "Obesitas";
       setQuickResult({ bmi, status });
     }
+  };
+
+  const resetQuickBMI = () => {
+    setQuickResult(null);
+    setQuickHeight("");
+    setQuickWeight("");
   };
 
   const scrollToFeatures = () => {
@@ -62,7 +91,7 @@ const LandingPage = () => {
       <Navbar />
 
       <div className="landing-wrapper">
-        {/* --- HERO SECTION (PREMIUM PHOTO BACKGROUND) --- */}
+        {/* --- HERO SECTION --- */}
         <div className="hero-section">
           <div className="hero-glow glow-1"></div>
           <div className="hero-glow glow-2"></div>
@@ -106,7 +135,7 @@ const LandingPage = () => {
                 </div>
               </div>
 
-              {/* QUICK BMI CALCULATOR (MOVED HERE) */}
+              {/* QUICK BMI CALCULATOR */}
               <div className="quick-bmi-card">
                 <div className="quick-bmi-header">
                   <h4>💡 Cek BMI Cepat</h4>
@@ -148,6 +177,9 @@ const LandingPage = () => {
                       Ingin menyimpan hasil ini dan memantau progres harianmu?
                       <Link to="/register"> Daftar Sekarang!</Link>
                     </p>
+                    <button onClick={resetQuickBMI} className="btn-reset-quick">
+                      Hitung Ulang ↺
+                    </button>
                   </div>
                 )}
               </div>
@@ -161,7 +193,8 @@ const LandingPage = () => {
           <div className="bg-blob blob-2"></div>
           <div className="bg-blob blob-3"></div>
 
-          <div className="features-header">
+          {/* Animasi Fade Up pada Judul */}
+          <div className="features-header reveal-on-scroll fade-up">
             <h2>
               Kenapa Memilih{" "}
               <span className="text-highlight">AAI Nutricare?</span>
@@ -173,7 +206,8 @@ const LandingPage = () => {
           </div>
 
           <div id="about-section" className="about-wrapper">
-            <div className="about-text-content">
+            {/* Animasi Masuk dari Kiri */}
+            <div className="about-text-content reveal-on-scroll fade-left">
               <h3 className="about-title">Asisten Kesehatan Pribadimu</h3>
               <p>
                 <strong>AAI Nutricare</strong> bukan sekadar aplikasi pencatat
@@ -193,32 +227,41 @@ const LandingPage = () => {
               </ul>
             </div>
 
+            {/* Animasi Masuk dari Kanan */}
             <div className="about-visual-content">
-              <div className="floating-stat-card card-1">
-                <span className="stat-icon">🔥</span>
-                <div>
-                  <h4>500 kcal</h4>
-                  <p>Kalori Terbakar</p>
+              <div className="reveal-on-scroll fly-in-right delay-100">
+                <div className="floating-stat-card card-1 interactive-card">
+                  <span className="stat-icon">🔥</span>
+                  <div>
+                    <h4>500 kcal</h4>
+                    <p>Kalori Terbakar</p>
+                  </div>
                 </div>
               </div>
-              <div className="floating-stat-card card-2">
-                <span className="stat-icon">🎯</span>
-                <div>
-                  <h4>65 kg</h4>
-                  <p>Target Ideal</p>
+
+              <div className="reveal-on-scroll fly-in-right delay-300">
+                <div className="floating-stat-card card-2 interactive-card">
+                  <span className="stat-icon">🎯</span>
+                  <div>
+                    <h4>65 kg</h4>
+                    <p>Target Ideal</p>
+                  </div>
                 </div>
               </div>
-              <div className="floating-stat-card card-3">
-                <span className="stat-icon">🥗</span>
-                <div>
-                  <h4>Seimbang</h4>
-                  <p>Status Gizi Hari Ini</p>
+
+              <div className="reveal-on-scroll fly-in-right delay-500">
+                <div className="floating-stat-card card-3 interactive-card">
+                  <span className="stat-icon">🥗</span>
+                  <div>
+                    <h4>Seimbang</h4>
+                    <p>Status Gizi Hari Ini</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="unggulan-header">
+          <div className="unggulan-header reveal-on-scroll fade-up">
             <h3>
               <span className="text-highlight">Fitur Unggulan</span> Kami
             </h3>
@@ -229,39 +272,47 @@ const LandingPage = () => {
           </div>
 
           <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon glass-icon">⚖️</div>
-              <h3>BMI Cerdas</h3>
-              <p>
-                Ketahui persis di mana posisi kesehatanmu. Sistem kami
-                menghitung Indeks Massa Tubuh secara instan dan memberikan
-                panduan status idealmu.
-              </p>
+            {/* Animasi Staggered Zoom In (Bergantian) */}
+            <div className="reveal-on-scroll zoom-in delay-100">
+              <div className="feature-card">
+                <div className="feature-icon glass-icon float-hover">⚖️</div>
+                <h3>BMI Cerdas</h3>
+                <p>
+                  Ketahui persis di mana posisi kesehatanmu. Sistem kami
+                  menghitung Indeks Massa Tubuh secara instan dan memberikan
+                  panduan status idealmu.
+                </p>
+              </div>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon glass-icon">🥗</div>
-              <h3>Jurnal Kalori</h3>
-              <p>
-                Catat setiap makanan dengan mudah. Kontrol batas asupan kalori
-                harianmu agar tetap seimbang tanpa harus merasa kelaparan.
-              </p>
+            <div className="reveal-on-scroll zoom-in delay-200">
+              <div className="feature-card">
+                <div className="feature-icon glass-icon float-hover">🥗</div>
+                <h3>Jurnal Kalori</h3>
+                <p>
+                  Catat setiap makanan dengan mudah. Kontrol batas asupan kalori
+                  harianmu agar tetap seimbang tanpa harus merasa kelaparan.
+                </p>
+              </div>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon glass-icon">🎯</div>
-              <h3>Target Akurat</h3>
-              <p>
-                Tetapkan tujuanmu! Ingin menurunkan atau menaikkan berat badan?
-                Pantau histori harianmu dan jadikan evaluasi yang memotivasi.
-              </p>
+            <div className="reveal-on-scroll zoom-in delay-300">
+              <div className="feature-card">
+                <div className="feature-icon glass-icon float-hover">🎯</div>
+                <h3>Target Akurat</h3>
+                <p>
+                  Tetapkan tujuanmu! Ingin menurunkan atau menaikkan berat
+                  badan? Pantau histori harianmu dan jadikan evaluasi yang
+                  memotivasi.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* --- CARA KERJA SECTION (3 LANGKAH MUDAH) --- */}
         <div className="how-it-works-section">
-          <div className="section-header-centered">
+          <div className="section-header-centered reveal-on-scroll fade-up">
             <div className="modern-badge">
               <span className="badge-icon">🚀</span> Langkah Mudah
             </div>
@@ -275,38 +326,48 @@ const LandingPage = () => {
           </div>
 
           <div className="steps-container">
-            <div className="step-card">
-              <div className="step-number">1</div>
-              <div className="step-icon-big">📝</div>
-              <h3>Input Data</h3>
-              <p>
-                Masukkan tinggi, berat, dan target berat badan idealmu di profil
-                pengguna.
-              </p>
+            <div className="reveal-on-scroll fade-up delay-100 step-wrapper">
+              <div className="step-card">
+                <div className="step-number">1</div>
+                <div className="step-icon-big floating-icon">📝</div>
+                <h3>Input Data</h3>
+                <p>
+                  Masukkan tinggi, berat, dan target berat badan idealmu di
+                  profil pengguna.
+                </p>
+              </div>
             </div>
 
-            <div className="step-arrow">➔</div>
-
-            <div className="step-card">
-              <div className="step-number">2</div>
-              <div className="step-icon-big">📸</div>
-              <h3>Catat Konsumsi</h3>
-              <p>
-                Pilih makanan dari database kami yang lengkap atau catat asupan
-                harianmu.
-              </p>
+            <div className="step-arrow reveal-on-scroll zoom-in delay-200 arrow-bounce">
+              ➔
             </div>
 
-            <div className="step-arrow">➔</div>
+            <div className="reveal-on-scroll fade-up delay-300 step-wrapper">
+              <div className="step-card">
+                <div className="step-number">2</div>
+                <div className="step-icon-big floating-icon">📸</div>
+                <h3>Catat Konsumsi</h3>
+                <p>
+                  Pilih makanan dari database kami yang lengkap atau catat
+                  asupan harianmu.
+                </p>
+              </div>
+            </div>
 
-            <div className="step-card">
-              <div className="step-number">3</div>
-              <div className="step-icon-big">📊</div>
-              <h3>Lihat Hasil</h3>
-              <p>
-                Pantau grafik kemajuanmu setiap minggu dan capai target sehatmu
-                lebih cepat.
-              </p>
+            <div className="step-arrow reveal-on-scroll zoom-in delay-400 arrow-bounce">
+              ➔
+            </div>
+
+            <div className="reveal-on-scroll fade-up delay-500 step-wrapper">
+              <div className="step-card">
+                <div className="step-number">3</div>
+                <div className="step-icon-big floating-icon">📊</div>
+                <h3>Lihat Hasil</h3>
+                <p>
+                  Pantau grafik kemajuanmu setiap minggu dan capai target
+                  sehatmu lebih cepat.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -314,7 +375,7 @@ const LandingPage = () => {
         {/* --- ARTIKEL EDUKASI KALORI SECTION --- */}
         <div className="article-section">
           <div className="article-container">
-            <div className="article-text-content">
+            <div className="article-text-content reveal-on-scroll fade-left">
               <div
                 className="modern-badge"
                 style={{
@@ -338,7 +399,7 @@ const LandingPage = () => {
               </p>
 
               <div className="article-tips">
-                <div className="tip-box">
+                <div className="tip-box interactive-card">
                   <div className="tip-icon">📉</div>
                   <div>
                     <h4>Defisit Kalori</h4>
@@ -348,7 +409,7 @@ const LandingPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="tip-box">
+                <div className="tip-box interactive-card">
                   <div className="tip-icon">📈</div>
                   <div>
                     <h4>Surplus Kalori</h4>
@@ -361,19 +422,19 @@ const LandingPage = () => {
               </div>
             </div>
 
-            <div className="article-visual-content">
-              {/* Simulasi UI Widget Aplikasi */}
-              <div className="app-widget-card">
+            <div className="article-visual-content reveal-on-scroll fade-right delay-200">
+              <div className="app-widget-card float-hover">
                 <div className="widget-header">
                   <div>
                     <h4>Database Makanan Harian</h4>
                     <p>Estimasi rata-rata porsi normal</p>
                   </div>
-                  <span className="badge-warning">Perhatikan Porsi!</span>
+                  <span className="badge-warning blink-soft">
+                    Perhatikan Porsi!
+                  </span>
                 </div>
 
                 <div className="food-list-container scrollable-food-list">
-                  {/* Karbohidrat */}
                   <div className="category-tag">Energi & Karbo</div>
                   {[
                     {
@@ -412,7 +473,6 @@ const LandingPage = () => {
                     <FoodItem key={i} {...f} />
                   ))}
 
-                  {/* Protein */}
                   <div className="category-tag mt-4">Protein & Lauk</div>
                   {[
                     {
@@ -451,7 +511,6 @@ const LandingPage = () => {
                     <FoodItem key={i} {...f} />
                   ))}
 
-                  {/* Camilan/Lainnya */}
                   <div className="category-tag mt-4">Camilan & Buah</div>
                   {[
                     {
@@ -498,15 +557,13 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* --- APP DOWNLOAD SECTION (BARU) --- */}
+        {/* --- APP DOWNLOAD SECTION --- */}
         <div className="app-download-section">
-          <div className="app-download-wrapper">
-            {/* Ornamen Background Circle */}
+          <div className="app-download-wrapper reveal-on-scroll fade-up">
             <div className="download-bubble bubble-1"></div>
             <div className="download-bubble bubble-2"></div>
 
-            {/* Ikon Android Floating (Kanan Atas) */}
-            <div className="floating-android">
+            <div className="floating-android pulse-glow">
               <svg
                 viewBox="0 0 24 24"
                 fill="currentColor"
@@ -521,22 +578,19 @@ const LandingPage = () => {
               <div className="app-dl-badge">
                 <span className="badge-icon">📱</span> Aplikasi Mobile
               </div>
-
               <h2 className="app-dl-title">
                 Download Aplikasi
                 <br />
                 AAI Nutricare Sekarang!
               </h2>
-
               <p className="app-dl-desc">
                 Akses semua fitur kesehatan langsung dari smartphone Anda.
                 Pencatatan asupan makanan, kalkulator BMI cerdas, dan analisis
                 gizi dalam genggaman.
               </p>
-
               <div className="app-dl-features">
                 <span className="app-dl-feature-pill">
-                  <span className="icon">📸</span> Galeri Nutrisi
+                  <span className="icon">📸</span> Scan Makanan
                 </span>
                 <span className="app-dl-feature-pill">
                   <span className="icon">📊</span> Jurnal Kalori
@@ -545,7 +599,6 @@ const LandingPage = () => {
                   <span className="icon">📈</span> Pantau Progres
                 </span>
               </div>
-
               <div
                 className="btn-download-app disabled-btn"
                 title="Segera Hadir!"
@@ -556,18 +609,17 @@ const LandingPage = () => {
                 </div>
                 <span className="dl-btn-arrow">🔒</span>
               </div>
-
               <p className="app-dl-note warning-text">
                 <span className="info-icon">🚧</span> Aplikasi mobile sedang
                 dalam tahap pembuatan
               </p>
             </div>
 
-            <div className="app-dl-visual">
+            <div className="app-dl-visual reveal-on-scroll zoom-in delay-200">
               <img
                 src="/preview-mobile.jpeg"
                 alt="AAI Nutricare Mobile App"
-                className="phone-mockup"
+                className="phone-mockup float-hover"
               />
             </div>
           </div>
@@ -575,7 +627,7 @@ const LandingPage = () => {
 
         {/* --- FAQ SECTION --- */}
         <div id="faq-section" className="faq-section">
-          <div className="faq-header">
+          <div className="faq-header reveal-on-scroll fade-up">
             <h2>
               Pertanyaan <span className="text-highlight">Umum</span>
             </h2>
@@ -586,49 +638,151 @@ const LandingPage = () => {
           </div>
 
           <div className="faq-grid">
-            <div className="faq-card">
-              <h4>Apakah AAI Nutricare gratis digunakan?</h4>
-              <p>
-                Ya! Fitur utama seperti kalkulator BMI dan jurnal kalori harian
-                dapat Anda gunakan sepenuhnya secara gratis.
-              </p>
-            </div>
-            <div className="faq-card">
-              <h4>Bagaimana cara aplikasi ini menghitung kalori?</h4>
-              <p>
-                Sistem kami akan mengurangi target kalori harian Anda secara
-                otomatis setiap kali Anda menambahkan makanan ke dalam jurnal.
-              </p>
-            </div>
-            <div className="faq-card">
-              <h4>Apakah data kesehatan saya aman?</h4>
-              <p>
-                Keamanan privasi Anda adalah prioritas kami. Data berat badan
-                dan riwayat asupan gizi hanya bisa diakses oleh Anda sendiri.
-              </p>
-            </div>
-            <div className="faq-card">
-              <h4>Apakah cocok untuk menaikkan berat badan?</h4>
-              <p>
-                Tentu saja! Sesuaikan target di profil Anda, dan sistem akan
-                membantu memantau asupan kalori surplus Anda.
-              </p>
-            </div>
+            {[
+              {
+                q: "Apakah AAI Nutricare gratis digunakan?",
+                a: "Ya! Fitur utama seperti kalkulator BMI dan jurnal kalori harian dapat Anda gunakan sepenuhnya secara gratis.",
+              },
+              {
+                q: "Bagaimana cara aplikasi ini menghitung kalori?",
+                a: "Sistem kami akan mengurangi target kalori harian Anda secara otomatis setiap kali Anda menambahkan makanan ke dalam jurnal.",
+              },
+              {
+                q: "Apakah data kesehatan saya aman?",
+                a: "Keamanan privasi Anda adalah prioritas kami. Data berat badan dan riwayat asupan gizi hanya bisa diakses oleh Anda sendiri.",
+              },
+              {
+                q: "Apakah cocok untuk menaikkan berat badan?",
+                a: "Tentu saja! Sesuaikan target di profil Anda, dan sistem akan membantu memantau asupan kalori surplus Anda.",
+              },
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className={`reveal-on-scroll fade-up delay-${(index + 1) * 100}`}
+              >
+                <div className="faq-card interactive-card">
+                  <h4>{faq.q}</h4>
+                  <p>{faq.a}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* --- CALL TO ACTION (CTA) SECTION --- */}
         <div className="cta-section">
-          <div className="cta-box">
-            <h2>Siap Menjaga Kesehatan Pribadi Anda?</h2>
-            <p>
-              Bergabunglah dengan ribuan pengguna yang telah mempercayai AAI
-            </p>
-            <Link to="/register" className="btn-modern-primary btn-cta">
-              Mulai Sekarang - Gratis
-            </Link>
+          <div className="reveal-on-scroll zoom-in delay-100">
+            <div className="cta-box">
+              <h2>Siap Menjaga Kesehatan Pribadi Anda?</h2>
+              <p>
+                Bergabunglah dengan ribuan pengguna yang telah mempercayai AAI
+              </p>
+              <Link
+                to="/register"
+                className="btn-modern-primary btn-cta shake-btn"
+              >
+                Mulai Sekarang - Gratis
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* --- FOOTER SECTION --- */}
+        <footer className="main-footer">
+          <div className="footer-container">
+            <div className="footer-top">
+              <div className="footer-brand">
+                <h2 className="footer-logo">
+                  <span className="text-highlight">AAI</span> Nutricare
+                </h2>
+                <p className="footer-brand-desc">
+                  Solusi digital cerdas untuk memantau gizi dan kesehatan tubuh
+                  Anda. Mulailah perjalanan hidup sehat bersama kami.
+                </p>
+                <div className="footer-socials">
+                  <a href="#" className="social-icon">
+                    FB
+                  </a>
+                  <a href="#" className="social-icon">
+                    IG
+                  </a>
+                  <a href="#" className="social-icon">
+                    TW
+                  </a>
+                  <a href="#" className="social-icon">
+                    YT
+                  </a>
+                </div>
+              </div>
+
+              <div className="footer-links-group">
+                <div className="footer-links-col">
+                  <h4>Navigasi</h4>
+                  <ul>
+                    <li>
+                      <Link to="/">Beranda</Link>
+                    </li>
+                    <li>
+                      <a href="#info-features">Fitur</a>
+                    </li>
+                    <li>
+                      <a href="#faq-section">FAQ</a>
+                    </li>
+                    <li>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="footer-links-col">
+                  <h4>Layanan</h4>
+                  <ul>
+                    <li>
+                      <Link to="/jurnal">Jurnal Kalori</Link>
+                    </li>
+                    <li>
+                      <Link to="/database-makanan">Database Makanan</Link>
+                    </li>
+                    <li>
+                      <Link to="/progres-laporan">Progres Laporan</Link>
+                    </li>
+                    <li>
+                      <Link to="/profil-target">Profil Target</Link>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="footer-links-col">
+                  <h4>Dukungan</h4>
+                  <ul>
+                    <li>
+                      <a href="#">Pusat Bantuan</a>
+                    </li>
+                    <li>
+                      <a href="#">Kebijakan Privasi</a>
+                    </li>
+                    <li>
+                      <a href="#">Syarat & Ketentuan</a>
+                    </li>
+                    <li>
+                      <a href="#">Hubungi Kami</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="footer-bottom">
+              <p>
+                &copy; 2026 <span className="text-highlight">AAI Nutricare</span>.
+                All rights reserved.
+              </p>
+              <div className="footer-legal">
+                <span>Dibuat dengan ❤️ untuk Indonesia Sehat</span>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );

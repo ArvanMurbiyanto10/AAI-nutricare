@@ -390,6 +390,24 @@
   text-decoration: underline;
 }
 
+.btn-reset-quick {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-reset-quick:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
 /* --- FITUR SECTION --- */
 .features-section {
   padding: 120px 5%;
@@ -1320,6 +1338,130 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* --- FOOTER SECTION --- */
+.main-footer {
+  background-color: #ffffff;
+  padding: 100px 5% 50px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.footer-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 80px;
+  margin-bottom: 80px;
+}
+
+.footer-brand {
+  flex: 1.5;
+  max-width: 400px;
+}
+
+.footer-logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.footer-brand-desc {
+  font-size: 1.05rem;
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icon {
+  width: 45px;
+  height: 45px;
+  background: #f8fafc;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background: #10b981;
+  color: white;
+  transform: translateY(-5px);
+  border-color: #10b981;
+}
+
+.footer-links-group {
+  flex: 3;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer-links-col h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 25px;
+}
+
+.footer-links-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links-col ul li {
+  margin-bottom: 15px;
+}
+
+.footer-links-col ul li a {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.footer-links-col ul li a:hover {
+  color: #10b981;
+  padding-left: 5px;
+}
+
+.footer-bottom {
+  padding-top: 40px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-bottom p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.footer-legal {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 /* --- ANIMASI --- */
 @keyframes slideUpFade {
   0% {
@@ -1356,6 +1498,201 @@
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+.reveal-on-scroll {
+  opacity: 0;
+  visibility: hidden;
+  /* Mengaktifkan Akselerasi Hardware (GPU) agar tidak patah-patah */
+  will-change: transform, opacity;
+  transition:
+    opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    visibility 0.8s;
+}
+
+/* Saat elemen masuk ke dalam layar viewport (dipicu oleh JS Observer) */
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0) scale(1) rotate(0);
+}
+
+/* --- Tipe-Tipe Arah Animasi --- */
+.fade-up {
+  transform: translateY(80px);
+}
+.fade-left {
+  transform: translateX(-80px);
+}
+.fade-right {
+  transform: translateX(80px);
+}
+.zoom-in {
+  transform: scale(0.85);
+}
+
+.fade-up {
+  transform: translateY(80px);
+}
+.fade-left {
+  transform: translateX(-80px);
+}
+.fade-right {
+  transform: translateX(80px);
+}
+.zoom-in {
+  transform: scale(0.85);
+}
+
+/* Efek Banting Keren (Fly In) */
+.fly-in-right {
+  transform: translateX(150px) translateY(50px) rotate(12deg) scale(0.7);
+}
+
+/* --- Sistem Staggered Delay (Muncul Bergantian Seperti Domino) --- */
+.delay-100 {
+  transition-delay: 0.1s;
+}
+.delay-200 {
+  transition-delay: 0.2s;
+}
+.delay-300 {
+  transition-delay: 0.3s;
+}
+.delay-400 {
+  transition-delay: 0.4s;
+}
+.delay-500 {
+  transition-delay: 0.5s;
+}
+
+/* Wrapper Khusus agar delay animasi tidak bertabrakan dengan flexbox */
+.step-wrapper {
+  width: 100%;
+  display: flex;
+  flex: 1;
+}
+
+/* =========================================================
+   --- EFEK INTERAKTIF (HOVER, FLOATING, BOUNCING) --- 
+   ========================================================= */
+
+/* 1. Membuat icon atau gambar melayang santai seperti gravitasi nol */
+.float-hover {
+  animation: floatZeroGravity 6s ease-in-out infinite;
+}
+
+@keyframes floatZeroGravity {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+/* 2. Membuat elemen interaktif (Card) terasa memantul saat disentuh mouse */
+.interactive-card {
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  cursor: default;
+}
+.interactive-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* 3. Membuat Tanda Panah (➔) di "Cara Kerja" berdenyut maju-mundur */
+.arrow-bounce {
+  display: inline-block;
+  animation: bounceHorizontal 2s infinite ease-in-out;
+}
+@keyframes bounceHorizontal {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+    color: #10b981;
+  }
+}
+
+/* 4. Membuat Ikon Langkah Kerja melayang kecil terus-menerus */
+.floating-icon {
+  display: inline-block;
+  animation: floatSmall 3s ease-in-out infinite;
+}
+@keyframes floatSmall {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* 5. Efek Berdenyut Cahaya pada Ikon Logo Android */
+.pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* 6. Efek Berkedip Lembut pada Badge Peringatan Porsi Makanan */
+.blink-soft {
+  animation: blinkSoft 2s infinite ease-in-out;
+}
+@keyframes blinkSoft {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+    background-color: #f59e0b;
+    color: white;
+  }
+}
+
+/* 7. Tombol CTA Paling Bawah Goyang Pelan (Menggoda pengguna agar klik) */
+.shake-btn {
+  animation: gentleShake 5s infinite;
+}
+@keyframes gentleShake {
+  0%,
+  90%,
+  100% {
+    transform: rotate(0);
+  }
+  92% {
+    transform: rotate(-3deg) scale(1.05);
+  }
+  94% {
+    transform: rotate(3deg) scale(1.05);
+  }
+  96% {
+    transform: rotate(-3deg) scale(1.05);
+  }
+  98% {
+    transform: rotate(3deg) scale(1.05);
   }
 }
 

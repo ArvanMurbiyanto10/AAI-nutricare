@@ -1,0 +1,70 @@
+.db-container {
+  padding: 20px;
+  max-width: 900px;
+  animation: fadeIn 0.5s ease;
+}
+.db-header {
+  margin-bottom: 30px;
+}
+.db-header h2 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+}
+.db-header p {
+  color: #64748b;
+  margin: 0;
+}
+
+.search-bar-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.search-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s;
+}
+.search-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+.btn-search {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0 30px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn-search:hover {
+  background: #059669;
+}
+
+.db-results {
+  background: white;
+  border-radius: 20px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #cbd5e1;
+}
+.db-empty-state {
+  text-align: center;
+  color: #94a3b8;
+}
+.search-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
