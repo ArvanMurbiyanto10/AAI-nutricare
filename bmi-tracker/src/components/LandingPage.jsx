@@ -774,8 +774,9 @@ const LandingPage = () => {
 
             <div className="footer-bottom">
               <p>
-                &copy; 2026 <span className="text-highlight">AAI Nutricare</span>.
-                All rights reserved.
+                &copy; 2026{" "}
+                <span className="text-highlight">AAI Nutricare</span>. All
+                rights reserved.
               </p>
               <div className="footer-legal">
                 <span>Dibuat dengan ❤️ untuk Indonesia Sehat</span>
