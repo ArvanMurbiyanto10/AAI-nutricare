@@ -1,142 +1,193 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import "./Dashboard.css";
-import Beranda from "./Beranda";
-import Jurnal from "./Jurnal";
-import DatabaseMakanan from "./DatabaseMakanan";
-import ProgresLaporan from "./ProgresLaporan";
-import ProfilTarget from "./ProfilTarget";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("beranda");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const navigate = useNavigate();
+  // Simulasi State Interaktif
+  const [waterGlasses, setWaterGlasses] = useState(3);
+  const targetWater = 8;
 
-  // Animasi masuk saat dashboard dimuat
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  const handleLogout = () => navigate("/");
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "beranda":
-        return <Beranda />;
-      case "jurnal":
-        return <Jurnal />;
-      case "database":
-        return <DatabaseMakanan />;
-      case "progres":
-        return <ProgresLaporan />;
-      case "profil":
-        return <ProfilTarget />;
-      default:
-        return <Beranda />;
-    }
+  const userData = {
+    name: "Arvan",
+    bmi: 23.0,
+    bmiStatus: "Normal",
+    caloriesTarget: 2200,
+    caloriesConsumed: 1450,
   };
 
-  const handleMenuClick = (tabName) => {
-    setActiveTab(tabName);
-    setIsMobileMenuOpen(false);
+  const caloriesLeft = userData.caloriesTarget - userData.caloriesConsumed;
+  const caloriePercent =
+    (userData.caloriesConsumed / userData.caloriesTarget) * 100;
+
+  // Animasi Framer
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  const handleDrinkWater = () => {
+    if (waterGlasses < targetWater) setWaterGlasses(waterGlasses + 1);
   };
 
   return (
-    <div className={`dashboard-grand-layout ${isLoaded ? "loaded" : ""}`}>
-      {/* Background Ornaments */}
-      <div className="dash-bg-shape shape-1"></div>
-      <div className="dash-bg-shape shape-2"></div>
+    <div className="dash-wrapper">
+      {/* --- PREMIUM TOP BAR --- */}
+      <header className="dash-topbar">
+        <div className="dash-greeting">
+          <motion.p
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            Siap menjadi lebih sehat hari ini?
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            Halo, {userData.name}! 👋
+          </motion.h2>
+        </div>
+        <div className="dash-actions">
+          <button className="icon-btn-glass">
+            🔔<span className="badge-dot"></span>
+          </button>
+          <Link to="/profil-target">
+            <img
+              src={`https://ui-avatars.com/api/?name=${userData.name}&background=fff&color=e53935`}
+              alt="Profile"
+              className="dash-avatar"
+            />
+          </Link>
+        </div>
+      </header>
 
-      <div className="dashboard-glass-container">
-        {/* SIDEBAR */}
-        <aside className={`premium-sidebar ${isMobileMenuOpen ? "open" : ""}`}>
-          <div className="sidebar-brand">
-            <div className="brand-icon">✨</div>
-            <h2>
-              <span className="text-emerald">AAI</span> Nutricare
-            </h2>
+      <motion.main
+        className="dash-main"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* --- HERO RING (KALORI) --- */}
+        <motion.div
+          className="card-glass hero-cal-card"
+          variants={itemVariants}
+        >
+          <div className="hero-cal-info">
+            <h3>Sisa Kalori Hari Ini</h3>
+            <p>Jaga asupanmu agar tetap dalam target.</p>
+            <Link to="/jurnal" className="btn-primary-glow">
+              <span>➕</span> Tambah Makan
+            </Link>
           </div>
 
-          <nav className="premium-nav">
-            {[
-              { id: "beranda", icon: "📊", label: "Beranda" },
-              { id: "jurnal", icon: "📓", label: "Jurnal Kalori" },
-              { id: "database", icon: "🥗", label: "Database Gizi" },
-              { id: "progres", icon: "📈", label: "Progres & Grafik" },
-              { id: "profil", icon: "⚙️", label: "Profil Saya" },
-            ].map((menu) => (
-              <button
-                key={menu.id}
-                className={`premium-nav-item ${activeTab === menu.id ? "active" : ""}`}
-                onClick={() => handleMenuClick(menu.id)}
-              >
-                <span className="nav-icon">{menu.icon}</span>
-                <span className="nav-label">{menu.label}</span>
-                {activeTab === menu.id && (
-                  <div className="active-indicator"></div>
-                )}
-              </button>
-            ))}
-          </nav>
-
-          <div className="sidebar-bottom">
-            <div className="premium-nav-item logout" onClick={handleLogout}>
-              <span className="nav-icon">🚪</span>
-              <span className="nav-label">Keluar Sistem</span>
-            </div>
-          </div>
-        </aside>
-
-        {isMobileMenuOpen && (
-          <div
-            className="mobile-backdrop"
-            onClick={() => setIsMobileMenuOpen(false)}
-          ></div>
-        )}
-
-        {/* MAIN AREA */}
-        <main className="premium-main">
-          <header className="premium-topbar">
-            <button
-              className="btn-mobile-toggle"
-              onClick={() => setIsMobileMenuOpen(true)}
+          <div className="cal-ring-container">
+            <div
+              className="cal-ring"
+              style={{
+                background: `conic-gradient(#10b981 ${caloriePercent}%, rgba(255,255,255,0.2) ${caloriePercent}%)`,
+              }}
             >
-              <span className="toggle-line"></span>
-              <span className="toggle-line short"></span>
-              <span className="toggle-line"></span>
-            </button>
-
-            <div className="topbar-search">
-              <span className="search-icon">🔍</span>
-              <input type="text" placeholder="Pencarian cepat..." />
-            </div>
-
-            <div className="topbar-actions">
-              <div className="action-btn notification has-alert">
-                🔔<span className="alert-dot"></span>
-              </div>
-              <div
-                className="action-user"
-                onClick={() => handleMenuClick("profil")}
-              >
-                <div className="user-text">
-                  <span className="user-name">Pengguna AAI</span>
-                  <span className="user-tier">🌟 Premium</span>
-                </div>
-                <img
-                  src="/nasi-putih.jpeg"
-                  alt="Avatar"
-                  className="user-avatar"
-                />{" "}
-                {/* Ganti foto avatar jika ada */}
+              <div className="cal-ring-inner">
+                <h2>{caloriesLeft}</h2>
+                <span>kcal</span>
               </div>
             </div>
-          </header>
+            <div className="cal-labels">
+              <div>
+                <span className="dot green"></span> Masuk:{" "}
+                {userData.caloriesConsumed}
+              </div>
+              <div>
+                <span className="dot gray"></span> Target:{" "}
+                {userData.caloriesTarget}
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
-          <div className="premium-content-wrapper">{renderContent()}</div>
-        </main>
-      </div>
+        {/* --- GRID HIGHLIGHTS --- */}
+        <div className="dash-grid-2">
+          {/* Status BMI */}
+          <motion.div className="card-solid bmi-card" variants={itemVariants}>
+            <div className="card-header-icon">
+              <h4>⚖️ Indeks Massa Tubuh</h4>
+              <Link to="/profil-target" className="link-text">
+                Ubah
+              </Link>
+            </div>
+            <div className="bmi-flex">
+              <h1 className="bmi-score">{userData.bmi}</h1>
+              <div className={`bmi-status ${userData.bmiStatus.toLowerCase()}`}>
+                {userData.bmiStatus}
+              </div>
+            </div>
+            <div className="bmi-bar">
+              <div className="bmi-marker" style={{ left: "45%" }}></div>
+            </div>
+            <div className="bmi-legend">
+              <span>Kurus</span>
+              <span>Normal</span>
+              <span>Gemuk</span>
+            </div>
+          </motion.div>
+
+          {/* Water Tracker Interaktif */}
+          <motion.div className="card-solid water-card" variants={itemVariants}>
+            <div className="card-header-icon">
+              <h4>💧 Hidrasi</h4>
+              <span className="water-count">
+                {waterGlasses}/{targetWater} Gelas
+              </span>
+            </div>
+            <div className="water-visual">
+              {Array.from({ length: targetWater }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`water-glass ${i < waterGlasses ? "filled" : ""}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleDrinkWater}
+                >
+                  {i < waterGlasses ? "🥛" : "🥤"}
+                </motion.div>
+              ))}
+            </div>
+            <p className="water-hint">Klik gelas untuk menambah minum</p>
+          </motion.div>
+        </div>
+
+        {/* --- NAVIGASI CEPAT BAWAH --- */}
+        <motion.div className="quick-nav-section" variants={itemVariants}>
+          <h3>Eksplorasi AAI-nutricare</h3>
+          <div className="quick-nav-grid">
+            <Link to="/database-makanan" className="nav-box food-db">
+              <span className="nav-icon">🍎</span>
+              <h4>Database Makanan</h4>
+              <p>Cari kalori bahan mentah</p>
+            </Link>
+            <Link to="/progres-laporan" className="nav-box progress-db">
+              <span className="nav-icon">📈</span>
+              <h4>Laporan Progres</h4>
+              <p>Grafik berat badanmu</p>
+            </Link>
+            <Link to="/scan-makanan" className="nav-box scan-db">
+              <span className="nav-icon">📷</span>
+              <h4>Scan Label</h4>
+              <p>Fitur AI Cerdas</p>
+            </Link>
+          </div>
+        </motion.div>
+      </motion.main>
     </div>
   );
 };

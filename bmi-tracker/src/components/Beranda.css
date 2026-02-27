@@ -4,8 +4,7 @@
   gap: 30px;
 }
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.9); /* Lebih opaque */
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 24px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);

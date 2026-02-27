@@ -1,51 +1,158 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import "./ProfilTarget.css";
 
 const ProfilTarget = () => {
-  return (
-    <div className="profil-container">
-      <div className="profil-header">
-        <h2>Profil & Target</h2>
-        <p>Sesuaikan data diri untuk perhitungan kalori yang lebih akurat.</p>
-      </div>
+  const [formData, setFormData] = useState({
+    tinggi: 172,
+    berat: 68,
+    usia: 21,
+    gender: "Laki-laki",
+    target: "maintain", // 'lose', 'maintain', 'gain'
+  });
 
-      <div className="profil-layout">
-        <div className="profil-card">
-          <div className="avatar-section">
-            <div className="avatar-circle">👤</div>
-            <h3>Pengguna AAI</h3>
-            <p>user@nutricare.com</p>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    alert("Profil dan Target berhasil diperbarui!");
+    // Nanti logika update ke Database/Supabase dimasukkan ke sini
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
+  return (
+    <div className="pt-layout">
+      {/* --- TOP BAR --- */}
+      <header className="top-bar-pt">
+        <Link to="/dashboard" className="btn-back">
+          <span>←</span> Kembali
+        </Link>
+        <div className="pt-header-title">
+          <h3>Profil & Target</h3>
+          <p>Sesuaikan metrik tubuhmu</p>
+        </div>
+        <div style={{ width: "80px" }}></div>
+      </header>
+
+      <main className="pt-content">
+        <motion.form
+          className="pt-form-container"
+          onSubmit={handleSave}
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+        >
+          {/* Section: Data Tubuh */}
+          <div className="pt-section">
+            <h4 className="pt-section-title">📊 Metrik Tubuh Saat Ini</h4>
+            <div className="pt-grid-inputs">
+              <div className="input-group">
+                <label>Tinggi Badan (cm)</label>
+                <input
+                  type="number"
+                  name="tinggi"
+                  value={formData.tinggi}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Berat Badan (kg)</label>
+                <input
+                  type="number"
+                  name="berat"
+                  value={formData.berat}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Usia</label>
+                <input
+                  type="number"
+                  name="usia"
+                  value={formData.usia}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label>Jenis Kelamin</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                >
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <form className="profil-form">
-            <div className="form-group">
-              <label>Umur (Tahun)</label>
-              <input type="number" defaultValue="25" />
+          {/* Section: Pemilihan Target */}
+          <div className="pt-section">
+            <h4 className="pt-section-title">🎯 Apa Target Kamu?</h4>
+            <div className="target-cards">
+              <label
+                className={`target-card ${formData.target === "lose" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="target"
+                  value="lose"
+                  checked={formData.target === "lose"}
+                  onChange={handleChange}
+                />
+                <span className="target-icon">📉</span>
+                <h5>Turunkan BB</h5>
+                <p>Defisit kalori sehat</p>
+              </label>
+
+              <label
+                className={`target-card ${formData.target === "maintain" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="target"
+                  value="maintain"
+                  checked={formData.target === "maintain"}
+                  onChange={handleChange}
+                />
+                <span className="target-icon">⚖️</span>
+                <h5>Jaga Berat Badan</h5>
+                <p>Pertahankan massa tubuh</p>
+              </label>
+
+              <label
+                className={`target-card ${formData.target === "gain" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="target"
+                  value="gain"
+                  checked={formData.target === "gain"}
+                  onChange={handleChange}
+                />
+                <span className="target-icon">📈</span>
+                <h5>Naikkan BB / Otot</h5>
+                <p>Surplus kalori & protein</p>
+              </label>
             </div>
-            <div className="form-group-row">
-              <div className="form-group">
-                <label>Tinggi (cm)</label>
-                <input type="number" defaultValue="170" />
-              </div>
-              <div className="form-group">
-                <label>Berat (kg)</label>
-                <input type="number" defaultValue="65" />
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Target Saya</label>
-              <select defaultValue="maintain">
-                <option value="lose">Turunkan Berat Badan</option>
-                <option value="maintain">Jaga Berat Badan</option>
-                <option value="gain">Naikkan Berat Badan</option>
-              </select>
-            </div>
-            <button type="button" className="btn-save-profil">
-              Simpan Perubahan
-            </button>
-          </form>
-        </div>
-      </div>
+          </div>
+
+          <button type="submit" className="btn-save-profile">
+            Simpan Perubahan
+          </button>
+        </motion.form>
+      </main>
     </div>
   );
 };

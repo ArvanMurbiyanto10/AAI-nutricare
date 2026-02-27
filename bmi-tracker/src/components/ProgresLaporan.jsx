@@ -1,134 +1,132 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import "./ProgresLaporan.css";
 
-const ProgresLaporan = () => {
-  const [drawChart, setDrawChart] = useState(false);
+// Mock Data Progres Berat Badan Mingguan
+const weightData = [
+  { minggu: "Minggu 1", berat: 70 },
+  { minggu: "Minggu 2", berat: 69.2 },
+  { minggu: "Minggu 3", berat: 68.5 },
+  { minggu: "Minggu 4", berat: 68.0 }, // Target saat ini
+];
 
-  useEffect(() => {
-    setTimeout(() => setDrawChart(true), 400);
-  }, []);
+const ProgresLaporan = () => {
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
 
   return (
-    <div className="progres-wow-container">
-      <div className="progres-header-wow slide-up">
-        <h2>Perjalanan Suksesmu 🏆</h2>
-        <p>
-          Konsistensi adalah kunci. Lihat seberapa jauh kamu telah melangkah!
-        </p>
-      </div>
-
-      <div className="chart-glass-card slide-up delay-1">
-        <div className="chart-title-area">
-          <h3>Grafik Berat Badan (Bulan Terakhir)</h3>
-          <span className="trend-badge positive">📉 Turun 2.5 kg!</span>
+    <div className="progres-layout">
+      {/* --- TOP BAR --- */}
+      <header className="top-bar-progres">
+        <Link to="/dashboard" className="btn-back">
+          <span>←</span> Kembali
+        </Link>
+        <div className="progres-header-title">
+          <h3>Laporan Progres</h3>
+          <p>Pantau hasil kerja kerasmu</p>
         </div>
+        <div style={{ width: "80px" }}></div>
+      </header>
 
-        {/* CUSTOM WOW SVG LINE CHART */}
-        <div className="wow-chart-wrapper">
-          <svg viewBox="0 0 800 300" className="wow-line-chart">
-            {/* Grid Garis Latar */}
-            <path d="M 50 250 L 750 250" className="grid-line" />
-            <path d="M 50 150 L 750 150" className="grid-line" />
-            <path d="M 50 50 L 750 50" className="grid-line" />
-
-            {/* Area Transparan Biru di Bawah Garis */}
-            <path
-              d="M 100 250 L 100 200 C 200 180, 300 120, 400 140 C 500 160, 600 70, 700 80 L 700 250 Z"
-              className={`area-gradient ${drawChart ? "reveal-area" : ""}`}
-            />
-
-            {/* Garis Utama Animasi */}
-            <path
-              d="M 100 200 C 200 180, 300 120, 400 140 C 500 160, 600 70, 700 80"
-              className={`main-line ${drawChart ? "draw-line" : ""}`}
-              strokeDasharray="1000"
-              strokeDashoffset="1000"
-            />
-
-            {/* Titik Point Data (Animasi Pop) */}
-            <circle
-              cx="100"
-              cy="200"
-              r="6"
-              className={`data-point ${drawChart ? "pop-1" : ""}`}
-            />
-            <circle
-              cx="230"
-              cy="160"
-              r="6"
-              className={`data-point ${drawChart ? "pop-2" : ""}`}
-            />
-            <circle
-              cx="400"
-              cy="140"
-              r="6"
-              className={`data-point ${drawChart ? "pop-3" : ""}`}
-            />
-            <circle
-              cx="560"
-              cy="110"
-              r="6"
-              className={`data-point ${drawChart ? "pop-4" : ""}`}
-            />
-            <circle
-              cx="700"
-              cy="80"
-              r="6"
-              className={`data-point highlight ${drawChart ? "pop-5" : ""}`}
-            />
-
-            {/* Teks Label X-Axis */}
-            <text x="100" y="280" className="chart-label">
-              Minggu 1
-            </text>
-            <text x="400" y="280" className="chart-label">
-              Minggu 2
-            </text>
-            <text x="700" y="280" className="chart-label">
-              Minggu 3 (Skrg)
-            </text>
-
-            {/* Teks Tooltip Melayang di Titik Terakhir */}
-            <g className={`tooltip-group ${drawChart ? "show-tooltip" : ""}`}>
-              <rect
-                x="660"
-                y="30"
-                width="80"
-                height="30"
-                rx="8"
-                className="tooltip-bg"
-              />
-              <text x="700" y="50" className="tooltip-text">
-                65.5 kg
-              </text>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-      <div className="bottom-stats-grid slide-up delay-2">
-        <div className="mini-stat-glass">
-          <div className="mini-icon fire">🔥</div>
-          <div className="mini-info">
-            <h4>Rata-rata Defisit</h4>
-            <p>-450 kcal/hari</p>
+      <main className="progres-content">
+        {/* Ringkasan Cepat */}
+        <motion.div
+          className="summary-cards"
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+        >
+          <div className="summary-card">
+            <span className="summary-icon">📉</span>
+            <div>
+              <p>Total Penurunan</p>
+              <h4>-2.0 kg</h4>
+            </div>
           </div>
-        </div>
-        <div className="mini-stat-glass">
-          <div className="mini-icon water">💧</div>
-          <div className="mini-info">
-            <h4>Asupan Air</h4>
-            <p>2.5 Liter/hari</p>
+          <div className="summary-card">
+            <span className="summary-icon">🔥</span>
+            <div>
+              <p>Rata-rata Kalori</p>
+              <h4>1,950 kcal/hari</h4>
+            </div>
           </div>
-        </div>
-        <div className="mini-stat-glass">
-          <div className="mini-icon steps">👟</div>
-          <div className="mini-info">
-            <h4>Aktivitas</h4>
-            <p>8,000 Langkah</p>
+        </motion.div>
+
+        {/* Grafik Interaktif dengan Recharts */}
+        <motion.div
+          className="chart-container"
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="chart-header">
+            <h4>Grafik Berat Badan</h4>
+            <span className="badge-time">1 Bulan Terakhir</span>
           </div>
-        </div>
-      </div>
+          <div className="chart-wrapper">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={weightData}
+                margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#e2e8f0"
+                />
+                <XAxis
+                  dataKey="minggu"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b" }}
+                  dy={10}
+                />
+                <YAxis
+                  domain={["dataMin - 1", "dataMax + 1"]}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: "#64748b" }}
+                  dx={-10}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "none",
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                  }}
+                  labelStyle={{ fontWeight: "bold", color: "#1e293b" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="berat"
+                  stroke="#e53935"
+                  strokeWidth={4}
+                  dot={{
+                    r: 6,
+                    fill: "#e53935",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{ r: 8, fill: "#10b981" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+      </main>
     </div>
   );
 };
