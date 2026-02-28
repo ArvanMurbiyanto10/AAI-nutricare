@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./Dashboard.css";
@@ -8,17 +8,63 @@ const Dashboard = () => {
   const [waterGlasses, setWaterGlasses] = useState(3);
   const targetWater = 8;
 
-  const userData = {
-    name: "Arvan",
-    bmi: 23.0,
-    bmiStatus: "Normal",
-    caloriesTarget: 2200,
-    caloriesConsumed: 1450,
-  };
+  // --- STATE UNTUK NAMA DAN BMI DINAMIS ---
+  const [userName, setUserName] = useState("Sang Juara");
+  const [bmiData, setBmiData] = useState({
+    score: "0.0",
+    status: "Belum ada data",
+    markerPosition: "50%" // Posisi tengah secara default
+  });
 
-  const caloriesLeft = userData.caloriesTarget - userData.caloriesConsumed;
-  const caloriePercent =
-    (userData.caloriesConsumed / userData.caloriesTarget) * 100;
+  // Data kalori (sementara masih simulasi)
+  const caloriesTarget = 2200;
+  const caloriesConsumed = 1450;
+  const caloriesLeft = caloriesTarget - caloriesConsumed;
+  const caloriePercent = (caloriesConsumed / caloriesTarget) * 100;
+
+  // --- LOGIKA MENGAMBIL DATA DARI LOCAL STORAGE ---
+  useEffect(() => {
+    // Ambil Nama
+    const storedUser = localStorage.getItem("aai_user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserName(parsedUser.name);
+    }
+
+    // Ambil Data Fisik & Hitung BMI
+    const storedFisik = localStorage.getItem("aai_data_fisik");
+    if (storedFisik) {
+      const parsedFisik = JSON.parse(storedFisik);
+      const tinggiMeter = parseFloat(parsedFisik.tinggi) / 100;
+      const beratKilo = parseFloat(parsedFisik.berat);
+
+      if (tinggiMeter > 0 && beratKilo > 0) {
+        const hitungBmi = beratKilo / (tinggiMeter * tinggiMeter);
+        let statusBmi = "";
+        
+        // Logika untuk menggeser marker di bar BMI (Perkiraan rentang BMI 15 sampai 35)
+        let mappedPercent = ((hitungBmi - 15) / 20) * 100;
+        if (mappedPercent < 5) mappedPercent = 5; // Batas kiri mentok
+        if (mappedPercent > 95) mappedPercent = 95; // Batas kanan mentok
+
+        if (hitungBmi < 18.5) {
+          statusBmi = "Kurus";
+        } else if (hitungBmi >= 18.5 && hitungBmi <= 24.9) {
+          statusBmi = "Normal";
+        } else if (hitungBmi >= 25 && hitungBmi <= 29.9) {
+          statusBmi = "Overweight";
+        } else {
+          statusBmi = "Obesitas";
+        }
+
+        setBmiData({
+          score: hitungBmi.toFixed(1),
+          status: statusBmi,
+          markerPosition: `${mappedPercent}%`
+        });
+      }
+    }
+  }, []);
 
   // Animasi Framer
   const containerVariants = {
@@ -54,7 +100,7 @@ const Dashboard = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
           >
-            Halo, {userData.name}! 👋
+            Halo, {userName}! 👋
           </motion.h2>
         </div>
         <div className="dash-actions">
@@ -63,7 +109,7 @@ const Dashboard = () => {
           </button>
           <Link to="/profil-target">
             <img
-              src={`https://ui-avatars.com/api/?name=${userData.name}&background=fff&color=e53935`}
+              src={`https://ui-avatars.com/api/?name=${userName}&background=fff&color=10b981`}
               alt="Profile"
               className="dash-avatar"
             />
@@ -105,11 +151,11 @@ const Dashboard = () => {
             <div className="cal-labels">
               <div>
                 <span className="dot green"></span> Masuk:{" "}
-                {userData.caloriesConsumed}
+                {caloriesConsumed}
               </div>
               <div>
                 <span className="dot gray"></span> Target:{" "}
-                {userData.caloriesTarget}
+                {caloriesTarget}
               </div>
             </div>
           </div>
@@ -126,13 +172,19 @@ const Dashboard = () => {
               </Link>
             </div>
             <div className="bmi-flex">
-              <h1 className="bmi-score">{userData.bmi}</h1>
-              <div className={`bmi-status ${userData.bmiStatus.toLowerCase()}`}>
-                {userData.bmiStatus}
+              <h1 className="bmi-score">{bmiData.score}</h1>
+              <div className={`bmi-status ${bmiData.status.toLowerCase()}`}>
+                {bmiData.status}
               </div>
             </div>
             <div className="bmi-bar">
-              <div className="bmi-marker" style={{ left: "45%" }}></div>
+              {/* Posisi marker sekarang dinamis mengikuti angka BMI */}
+              <motion.div 
+                className="bmi-marker" 
+                initial={{ left: "0%" }}
+                animate={{ left: bmiData.markerPosition }}
+                transition={{ duration: 1, type: "spring" }}
+              ></motion.div>
             </div>
             <div className="bmi-legend">
               <span>Kurus</span>

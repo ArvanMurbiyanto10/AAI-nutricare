@@ -1,88 +1,38 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Jurnal.css";
 
-// Mockup Data Makanan (Nanti ditarik dari Database)
-const foodDatabase = [
-  {
-    id: 1,
-    name: "Nasi Putih",
-    portion: "1 Centong (100g)",
-    cal: 130,
-    category: "Karbohidrat",
-  },
-  {
-    id: 2,
-    name: "Dada Ayam Bakar",
-    portion: "1 Potong (100g)",
-    cal: 165,
-    category: "Protein",
-  },
-  {
-    id: 3,
-    name: "Telur Rebus",
-    portion: "1 Butir",
-    cal: 78,
-    category: "Protein",
-  },
-  {
-    id: 4,
-    name: "Tempe Goreng",
-    portion: "1 Potong",
-    cal: 118,
-    category: "Nabati",
-  },
-  {
-    id: 5,
-    name: "Pisang Ambon",
-    portion: "1 Buah",
-    cal: 105,
-    category: "Buah",
-  },
-  {
-    id: 6,
-    name: "Indomie Goreng",
-    portion: "1 Bungkus",
-    cal: 380,
-    category: "Cepat Saji",
-  },
-  {
-    id: 7,
-    name: "Susu Sapi Segar",
-    portion: "1 Gelas (200ml)",
-    cal: 120,
-    category: "Minuman",
-  },
-];
-
 const JurnalKalori = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
   const [mealType, setMealType] = useState("Makan Siang");
   const [selectedFoods, setSelectedFoods] = useState([]);
 
-  // Filter pencarian
-  const filteredFoods = foodDatabase.filter((food) =>
-    food.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // --- LOGIKA 1: AMBIL DATA DARI LOCAL STORAGE SAAT HALAMAN DIBUKA ---
+  useEffect(() => {
+    const savedJournal = JSON.parse(localStorage.getItem("aai_jurnal")) || [];
+    setSelectedFoods(savedJournal);
+  }, []);
 
-  // Fungsi tambah/hapus makanan ke keranjang jurnal
-  const toggleFood = (food) => {
-    const isExist = selectedFoods.find((item) => item.id === food.id);
-    if (isExist) {
-      setSelectedFoods(selectedFoods.filter((item) => item.id !== food.id));
-    } else {
-      setSelectedFoods([...selectedFoods, food]);
-    }
+  // --- LOGIKA 2: HAPUS MAKANAN DARI JURNAL ---
+  const removeFood = (entryId) => {
+    const updatedJournal = selectedFoods.filter((item) => item.entryId !== entryId);
+    setSelectedFoods(updatedJournal);
+    // Update juga memori browser
+    localStorage.setItem("aai_jurnal", JSON.stringify(updatedJournal));
   };
 
-  // Hitung total kalori yang dipilih
+  // --- LOGIKA 3: HITUNG TOTAL KALORI ---
   const totalCalories = selectedFoods.reduce(
     (total, item) => total + item.cal,
     0,
   );
 
-  // Animasi Framer Motion
+  const handleFinalSave = () => {
+    alert(`Berhasil menyimpan total ${totalCalories} kcal ke database harian Anda!`);
+    navigate("/dashboard");
+  };
+
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
@@ -90,17 +40,16 @@ const JurnalKalori = () => {
 
   return (
     <div className="jurnal-layout">
-      {/* --- TOP BAR KEMBALI --- */}
+      {/* --- TOP BAR --- */}
       <header className="top-bar-jurnal">
         <Link to="/dashboard" className="btn-back">
           <span>←</span> Kembali
         </Link>
         <div className="jurnal-header-title">
           <h3>Jurnal Makanan</h3>
-          <p>Catat asupan kalori harianmu</p>
+          <p>Daftar asupanmu hari ini</p>
         </div>
-        <div style={{ width: "80px" }}></div>{" "}
-        {/* Spacer agar judul di tengah */}
+        <div style={{ width: "80px" }}></div>
       </header>
 
       <main className="jurnal-content">
@@ -122,89 +71,51 @@ const JurnalKalori = () => {
           ))}
         </motion.div>
 
-        {/* --- KOLOM PENCARIAN --- */}
-        <motion.div
-          className="search-container"
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-        >
-          <div className="search-box">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              placeholder="Cari makanan (ex: Nasi, Telur, Ayam...)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button
-                className="clear-search"
-                onClick={() => setSearchTerm("")}
-              >
-                ✖
-              </button>
-            )}
-          </div>
-        </motion.div>
-
-        {/* --- DAFTAR MAKANAN --- */}
+        {/* --- DAFTAR MAKANAN YANG SUDAH DICATAT --- */}
         <div className="food-list-grid">
+          <h4 style={{ margin: "10px 20px", color: "#64748b" }}>Makanan yang dicatat:</h4>
           <AnimatePresence>
-            {filteredFoods.length > 0 ? (
-              filteredFoods.map((food, index) => {
-                const isSelected = selectedFoods.some(
-                  (item) => item.id === food.id,
-                );
-                return (
-                  <motion.div
-                    key={food.id}
-                    className={`food-item-card ${isSelected ? "selected" : ""}`}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ delay: index * 0.05 }}
-                    onClick={() => toggleFood(food)}
-                  >
-                    <div className="food-item-info">
-                      <h4>{food.name}</h4>
-                      <p>
-                        {food.portion} •{" "}
-                        <span className="category-tag-small">
-                          {food.category}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="food-item-action">
-                      <span className="food-cal">{food.cal} kcal</span>
-                      <button
-                        className={`btn-select-food ${isSelected ? "active" : ""}`}
-                      >
-                        {isSelected ? "✓" : "+"}
-                      </button>
-                    </div>
-                  </motion.div>
-                );
-              })
+            {selectedFoods.length > 0 ? (
+              selectedFoods.map((food, index) => (
+                <motion.div
+                  key={food.entryId}
+                  className="food-item-card selected"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <div className="food-item-info">
+                    <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 'bold' }}>{food.jam}</span>
+                    <h4>{food.name}</h4>
+                    <p>{food.portion} • {food.category}</p>
+                  </div>
+                  <div className="food-item-action">
+                    <span className="food-cal">{food.cal} kcal</span>
+                    <button 
+                      className="btn-select-food active" 
+                      onClick={() => removeFood(food.entryId)}
+                      style={{ background: '#ff4d4d' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </motion.div>
+              ))
             ) : (
-              <motion.div
-                className="empty-search"
-                initial="hidden"
-                animate="visible"
-                variants={fadeUp}
-              >
-                <span className="empty-icon">🍽️</span>
-                <p>Makanan tidak ditemukan di database.</p>
-                <button className="btn-tambah-manual">
-                  Tambah Data Manual
-                </button>
+              <motion.div className="empty-search" variants={fadeUp} initial="hidden" animate="visible">
+                <span className="empty-icon">📝</span>
+                <p>Belum ada makanan di jurnal.</p>
+                <Link to="/database-makanan" className="btn-tambah-manual" style={{ textDecoration: 'none' }}>
+                  Cari di Database
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </main>
 
-      {/* --- FLOATING BOTTOM BAR (Muncul jika ada makanan dipilih) --- */}
+      {/* --- FLOATING BOTTOM BAR --- */}
       <AnimatePresence>
         {selectedFoods.length > 0 && (
           <motion.div
@@ -212,23 +123,15 @@ const JurnalKalori = () => {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 100 }}
           >
             <div className="summary-info">
-              <p>{selectedFoods.length} Makanan dipilih</p>
+              <p>{selectedFoods.length} Item terdaftar</p>
               <h3>
                 {totalCalories} <span>kcal</span>
               </h3>
             </div>
-            <button
-              className="btn-simpan-jurnal"
-              onClick={() =>
-                alert(
-                  `Berhasil menyimpan ${totalCalories} kcal untuk ${mealType}!`,
-                )
-              }
-            >
-              Simpan Jurnal
+            <button className="btn-simpan-jurnal" onClick={handleFinalSave}>
+              Simpan & Selesai
             </button>
           </motion.div>
         )}

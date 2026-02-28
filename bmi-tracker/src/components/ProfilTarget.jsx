@@ -1,27 +1,46 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./ProfilTarget.css";
 
 const ProfilTarget = () => {
+  const navigate = useNavigate(); // Inisialisasi navigasi
+
+  // 1. Kita jadikan satu state object agar rapi dan sesuai dengan inputan HTML di bawah
   const [formData, setFormData] = useState({
-    tinggi: 172,
-    berat: 68,
-    usia: 21,
-    gender: "Laki-laki",
-    target: "maintain", // 'lose', 'maintain', 'gain'
+    tinggi: "",
+    berat: "",
+    usia: "",
+    gender: "Laki-laki", // Default value
+    target: "", // Akan berisi 'lose', 'maintain', atau 'gain'
   });
 
+  // 2. Fungsi untuk menangani setiap ketikan / klik pada form
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // 3. --- LOGIKA SIMPAN PERUBAHAN ---
   const handleSave = (e) => {
-    e.preventDefault();
-    alert("Profil dan Target berhasil diperbarui!");
-    // Nanti logika update ke Database/Supabase dimasukkan ke sini
+    e.preventDefault(); // Mencegah halaman refresh otomatis
+
+    // Validasi sederhana: Pastikan form tinggi, berat, usia, dan target dipilih
+    if (!formData.tinggi || !formData.berat || !formData.usia || !formData.target) {
+      alert("Mohon lengkapi semua data fisik dan target Anda!");
+      return;
+    }
+
+    // Simpan data lengkap ke dalam localStorage
+    localStorage.setItem("aai_data_fisik", JSON.stringify(formData));
+
+    // Tampilkan pesan berhasil
+    alert("Profil dan Target berhasil disimpan! Membawamu ke Dashboard...");
+
+    // Arahkan pengguna ke halaman Dashboard
+    navigate("/dashboard");
   };
 
+  // Animasi dari framer-motion
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
@@ -44,7 +63,7 @@ const ProfilTarget = () => {
       <main className="pt-content">
         <motion.form
           className="pt-form-container"
-          onSubmit={handleSave}
+          onSubmit={handleSave} // Memanggil fungsi handleSave saat tombol ditekan
           initial="hidden"
           animate="visible"
           variants={fadeUp}

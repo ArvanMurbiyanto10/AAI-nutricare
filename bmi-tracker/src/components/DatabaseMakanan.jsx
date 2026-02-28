@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Tambahkan useNavigate
 import { motion, AnimatePresence } from "framer-motion";
 import "./DatabaseMakanan.css";
 
@@ -96,9 +96,10 @@ const foodDB = [
 ];
 
 const DatabaseMakanan = () => {
+  const navigate = useNavigate(); // Inisialisasi navigasi
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("Semua");
-  const [selectedFood, setSelectedFood] = useState(null); // State untuk Pop-up
+  const [selectedFood, setSelectedFood] = useState(null);
 
   const categories = [
     "Semua",
@@ -118,16 +119,38 @@ const DatabaseMakanan = () => {
     return matchSearch && matchCategory;
   });
 
-  // Mencegah scroll di background saat Pop-up terbuka
   if (selectedFood) {
     document.body.style.overflow = "hidden";
   } else {
     document.body.style.overflow = "unset";
   }
 
+  // --- LOGIKA MENAMBAH KE JURNAL ---
+  const handleAddToJournal = () => {
+    // 1. Ambil data jurnal yang mungkin sudah ada sebelumnya (jika kosong, buat array baru [])
+    const existingJournal = JSON.parse(localStorage.getItem("aai_jurnal")) || [];
+
+    // 2. Buat entri makanan baru, tambahkan ID unik (waktu klik) agar tidak bentrok jika makan makanan yang sama 2 kali
+    const newEntry = {
+      ...selectedFood,
+      entryId: Date.now(), 
+      jam: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // Menyimpan jam makan
+    };
+
+    // 3. Gabungkan makanan lama dengan yang baru
+    const updatedJournal = [...existingJournal, newEntry];
+
+    // 4. Simpan ke localStorage
+    localStorage.setItem("aai_jurnal", JSON.stringify(updatedJournal));
+
+    // 5. Tutup Pop-up dan pindah ke halaman Jurnal
+    setSelectedFood(null);
+    navigate("/jurnal");
+  };
+
   return (
     <div className="db-wrapper">
-      {/* --- TOP BAR MERAH ELEGAN --- */}
+      {/* --- TOP BAR --- */}
       <header className="db-topbar">
         <div className="db-header-content">
           <Link to="/dashboard" className="btn-back-glass">
@@ -185,7 +208,7 @@ const DatabaseMakanan = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                   className="food-macro-card"
-                  onClick={() => setSelectedFood(food)} // Buka pop-up saat diklik
+                  onClick={() => setSelectedFood(food)} 
                 >
                   <div className="macro-header">
                     <div>
@@ -285,9 +308,10 @@ const DatabaseMakanan = () => {
               </div>
 
               <div className="modal-actions">
-                <Link to="/jurnal" className="btn-add-to-journal">
+                {/* --- MENGGANTI LINK MENJADI BUTTON DENGAN FUNGSI SIMPAN --- */}
+                <button onClick={handleAddToJournal} className="btn-add-to-journal" style={{ width: '100%', padding: '15px', borderRadius: '12px', border: 'none', background: '#10b981', color: 'white', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer' }}>
                   ➕ Tambah ke Jurnal Hari Ini
-                </Link>
+                </button>
               </div>
             </motion.div>
           </>

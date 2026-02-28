@@ -113,7 +113,7 @@ const LandingPage = () => {
               </p>
 
               <div className="hero-action-buttons">
-                <Link to="/dashboard" className="btn-modern-primary">
+                <Link to="/register" className="btn-modern-primary">
                   Mulai Sekarang
                 </Link>
                 <Link to="/login" className="btn-modern-secondary">

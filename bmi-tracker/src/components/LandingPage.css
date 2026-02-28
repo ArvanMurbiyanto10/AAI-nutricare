@@ -13,6 +13,8 @@
   display: flex;
   align-items: center;
   position: relative;
+  /* Gradasi hitam/gelap dipertahankan untuk overlay gambar agar teks terbaca, 
+     BUKAN gradasi hijau */
   background:
     linear-gradient(rgba(6, 30, 20, 0.85), rgba(6, 30, 20, 0.95)),
     url("/fotolandingpage.jpeg");
@@ -93,10 +95,9 @@
   opacity: 0;
 }
 
+/* --- DIUBAH: GRADASI TEKS JADI WARNA SOLID --- */
 .gradient-text {
-  background: linear-gradient(to right, #34d399, #10b981);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #10b981; 
   display: block;
   font-size: 6.5rem;
   font-weight: 900;
@@ -464,10 +465,9 @@
   margin: 0 auto;
 }
 
+/* --- DIUBAH: GRADASI HIGHLIGHT JADI WARNA SOLID --- */
 .text-highlight {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #10b981; 
 }
 
 /* ABOUT WRAPPER */
@@ -545,11 +545,13 @@
   margin-left: auto;
   width: 85%;
 }
+
+/* --- DIUBAH: CARD 2 GRADASI JADI WARNA SOLID --- */
 .card-2 {
   animation-delay: 2s;
   margin-right: auto;
   width: 90%;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background-color: #10b981; 
   color: white;
 }
 .card-3 {
@@ -626,6 +628,7 @@
   overflow: hidden;
 }
 
+/* --- DIUBAH: GARIS HOVER JADI WARNA SOLID --- */
 .feature-card::before {
   content: "";
   position: absolute;
@@ -633,7 +636,7 @@
   left: 0;
   width: 100%;
   height: 5px;
-  background: linear-gradient(90deg, #10b981, #34d399);
+  background-color: #10b981; 
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s ease;
@@ -648,6 +651,7 @@
   transform: scaleX(1);
 }
 
+/* --- DIUBAH: BACKGROUND IKON FITUR JADI WARNA PASTEL SOLID --- */
 .feature-icon {
   font-size: 3rem;
   width: 80px;
@@ -655,7 +659,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #dcfce7, #ecfdf5);
+  background-color: #ecfdf5; 
   border-radius: 22px;
   margin-bottom: 25px;
   box-shadow: 0 8px 20px rgba(16, 185, 129, 0.1);
@@ -753,7 +757,7 @@
   color: #cbd5e1;
 }
 
-/* --- ARTIKEL EDUKASI KALORI (ENHANCED WIDGET UI) --- */
+/* --- ARTIKEL EDUKASI KALORI --- */
 .article-section {
   padding: 100px 5% 120px;
   background-color: #ffffff;
@@ -1025,8 +1029,9 @@
   margin: 0 auto;
 }
 
+/* --- DIUBAH: BANNER JADI WARNA HIJAU GELAP SOLID --- */
 .app-download-wrapper {
-  background: linear-gradient(135deg, #10b981 0%, #064e3b 100%);
+  background-color: #064e3b; 
   border-radius: 40px;
   display: flex;
   align-items: center;
@@ -1144,28 +1149,27 @@
   transform: translateY(-3px);
   color: #064e3b;
 }
-/* --- Efek Tombol Disabled (Belum Rilis) --- */
+
+/* --- Efek Tombol Disabled --- */
 .btn-download-app.disabled-btn {
-  background: #cbd5e1; /* Warna abu-abu mati */
-  cursor: not-allowed; /* Kursor berubah jadi tanda block/dilarang */
+  background: #cbd5e1;
+  cursor: not-allowed;
   box-shadow: none;
 }
 
 .btn-download-app.disabled-btn:hover {
-  transform: none; /* Mematikan efek tombol melayang */
-  background: #94a3b8; /* Abu-abu menjadi lebih gelap saat disorot mouse */
+  transform: none;
+  background: #94a3b8;
 }
 
-/* Mengubah teks di dalam tombol menjadi putih pucat */
 .btn-download-app.disabled-btn .dl-btn-texts .small,
 .btn-download-app.disabled-btn .dl-btn-texts .big,
 .btn-download-app.disabled-btn .dl-btn-arrow {
   color: #f8fafc;
 }
 
-/* Warna keterangan teks tahap pembuatan */
 .app-dl-note.warning-text {
-  color: #fde047; /* Warna kuning peringatan yang elegan */
+  color: #fde047; 
   font-weight: 600;
 }
 
@@ -1281,8 +1285,9 @@
   margin: 0 auto;
 }
 
+/* --- DIUBAH: KOTAK CTA JADI WARNA SOLID --- */
 .cta-box {
-  background: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
+  background-color: #064e3b; 
   border-radius: 30px;
   padding: 70px 40px;
   text-align: center;
@@ -1503,7 +1508,6 @@
 .reveal-on-scroll {
   opacity: 0;
   visibility: hidden;
-  /* Mengaktifkan Akselerasi Hardware (GPU) agar tidak patah-patah */
   will-change: transform, opacity;
   transition:
     opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -1511,7 +1515,6 @@
     visibility 0.8s;
 }
 
-/* Saat elemen masuk ke dalam layar viewport (dipicu oleh JS Observer) */
 .reveal-on-scroll.is-visible {
   opacity: 1;
   visibility: visible;
@@ -1519,55 +1522,21 @@
 }
 
 /* --- Tipe-Tipe Arah Animasi --- */
-.fade-up {
-  transform: translateY(80px);
-}
-.fade-left {
-  transform: translateX(-80px);
-}
-.fade-right {
-  transform: translateX(80px);
-}
-.zoom-in {
-  transform: scale(0.85);
-}
+.fade-up { transform: translateY(80px); }
+.fade-left { transform: translateX(-80px); }
+.fade-right { transform: translateX(80px); }
+.zoom-in { transform: scale(0.85); }
 
-.fade-up {
-  transform: translateY(80px);
-}
-.fade-left {
-  transform: translateX(-80px);
-}
-.fade-right {
-  transform: translateX(80px);
-}
-.zoom-in {
-  transform: scale(0.85);
-}
-
-/* Efek Banting Keren (Fly In) */
 .fly-in-right {
   transform: translateX(150px) translateY(50px) rotate(12deg) scale(0.7);
 }
 
-/* --- Sistem Staggered Delay (Muncul Bergantian Seperti Domino) --- */
-.delay-100 {
-  transition-delay: 0.1s;
-}
-.delay-200 {
-  transition-delay: 0.2s;
-}
-.delay-300 {
-  transition-delay: 0.3s;
-}
-.delay-400 {
-  transition-delay: 0.4s;
-}
-.delay-500 {
-  transition-delay: 0.5s;
-}
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; }
+.delay-500 { transition-delay: 0.5s; }
 
-/* Wrapper Khusus agar delay animasi tidak bertabrakan dengan flexbox */
 .step-wrapper {
   width: 100%;
   display: flex;
@@ -1578,7 +1547,6 @@
    --- EFEK INTERAKTIF (HOVER, FLOATING, BOUNCING) --- 
    ========================================================= */
 
-/* 1. Membuat icon atau gambar melayang santai seperti gravitasi nol */
 .float-hover {
   animation: floatZeroGravity 6s ease-in-out infinite;
 }
@@ -1593,7 +1561,6 @@
   }
 }
 
-/* 2. Membuat elemen interaktif (Card) terasa memantul saat disentuh mouse */
 .interactive-card {
   transition:
     transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -1607,7 +1574,6 @@
   border-color: rgba(16, 185, 129, 0.4);
 }
 
-/* 3. Membuat Tanda Panah (➔) di "Cara Kerja" berdenyut maju-mundur */
 .arrow-bounce {
   display: inline-block;
   animation: bounceHorizontal 2s infinite ease-in-out;
@@ -1623,7 +1589,6 @@
   }
 }
 
-/* 4. Membuat Ikon Langkah Kerja melayang kecil terus-menerus */
 .floating-icon {
   display: inline-block;
   animation: floatSmall 3s ease-in-out infinite;
@@ -1638,7 +1603,6 @@
   }
 }
 
-/* 5. Efek Berdenyut Cahaya pada Ikon Logo Android */
 .pulse-glow {
   animation: pulseGlow 2s infinite;
 }
@@ -1654,7 +1618,6 @@
   }
 }
 
-/* 6. Efek Berkedip Lembut pada Badge Peringatan Porsi Makanan */
 .blink-soft {
   animation: blinkSoft 2s infinite ease-in-out;
 }
@@ -1672,7 +1635,6 @@
   }
 }
 
-/* 7. Tombol CTA Paling Bawah Goyang Pelan (Menggoda pengguna agar klik) */
 .shake-btn {
   animation: gentleShake 5s infinite;
 }
@@ -1698,7 +1660,6 @@
 
 /* --- RESPONSIVE UNTUK LAYAR KECIL --- */
 @media (max-width: 960px) {
-  /* Hero */
   .hero-container {
     flex-direction: column;
     text-align: center;
@@ -1731,12 +1692,10 @@
     right: -10px;
   }
 
-  /* Kalkulator BMI Cepat */
   .quick-input-group {
     flex-direction: column;
   }
 
-  /* Fitur & Cara Kerja */
   .about-wrapper {
     flex-direction: column;
     padding: 30px;
@@ -1760,7 +1719,6 @@
     display: none;
   }
 
-  /* Artikel Widget */
   .article-container {
     flex-direction: column;
     gap: 40px;
@@ -1772,7 +1730,6 @@
     transform: rotateY(0deg);
   }
 
-  /* App Download Banner Baru */
   .app-download-wrapper {
     flex-direction: column;
     padding: 50px 25px;
@@ -1802,7 +1759,6 @@
     max-width: 220px;
   }
 
-  /* FAQ & CTA */
   .faq-grid {
     grid-template-columns: 1fr;
   }
